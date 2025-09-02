@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+
+<th:block layout:fragment="content">
+    <div class="container mx-auto max-w-6xl py-8">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold">Company Management</h1>
+            <a th:href="@{/admin/companies/new}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                New Company
+            </a>
+        </div>
+
+        <div class="bg-white shadow-md rounded my-6">
+            <table class="min-w-full table-auto">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">ID</th>
+                        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">Company Name</th>
+                        <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-xs leading-4 font-medium text-gray-600 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white">
+                    <tr th:each="company : ${page.content}">
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200" th:text="${company.companyId}">1</td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200" th:text="${company.companyName}">Sample Corp</td>
+                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                            <a th:href="@{/admin/companies/{id}(id=${company.companyId})}" class="text-indigo-600 hover:text-indigo-900">View</a>
+                            <a th:href="@{/admin/companies/{id}/edit(id=${company.companyId})}" class="text-indigo-600 hover:text-indigo-900 ml-4">Edit</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination controls would go here -->
+    </div>
+</th:block>
+</html>
