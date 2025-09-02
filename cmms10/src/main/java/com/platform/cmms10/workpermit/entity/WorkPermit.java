@@ -36,6 +36,12 @@ public class WorkPermit {
     @Column(name = "status")
     private String status; // e.g., REQUESTED, APPROVED, REJECTED, CLOSED
 
+    @Column(name = "permit_type_code")
+    private String permitTypeCode;
+
+    @Column(name = "dept_id")
+    private Long deptId;
+
     @Column(name = "created_by")
     private String createdBy;
 

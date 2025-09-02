@@ -1,0 +1,10 @@
+rootProject.name = 'platform-monorepo'
+
+include 'common-core'
+include 'common-web'
+include 'common-security'
+include 'platform10'
+include 'cmms10'
+include 'wflow10'
+include 'market10'
+include 'mportal10'

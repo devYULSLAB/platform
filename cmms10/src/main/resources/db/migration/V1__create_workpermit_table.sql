@@ -7,6 +7,7 @@ CREATE TABLE work_permit (
     permit_name VARCHAR(255) NOT NULL,
     requestor_name VARCHAR(255) NOT NULL,
     status VARCHAR(50),
+    permit_type_code VARCHAR(255),
     created_by VARCHAR(255),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_by VARCHAR(255),
