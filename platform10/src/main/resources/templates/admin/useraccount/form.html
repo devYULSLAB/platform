@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+<head>
+    <title th:text="${userAccount.userId == null} ? 'New User' : 'Edit User'">User Form</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mx-auto mt-10 max-w-4xl">
+    <h1 class="text-2xl font-bold mb-5" th:text="${userAccount.userId == null} ? 'New User' : 'Edit User'">User Form</h1>
+    <form th:action="${userAccount.userId == null} ? @{/admin/user-accounts} : @{/admin/user-accounts/{companyId}/{userId}(companyId=${userAccount.companyId}, userId=${userAccount.userId})}"
+          th:object="${userAccount}" method="post" class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="mb-4">
+            <label for="companyId" class="block text-gray-700 text-sm font-bold mb-2">Company:</label>
+            <select id="companyId" th:field="*{companyId}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    th:disabled="${userAccount.userId != null}">
+                <option value="">Select Company</option>
+                <option th:each="company : ${companies}" th:value="${company.companyId}" th:text="${company.companyName}"></option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="userId" class="block text-gray-700 text-sm font-bold mb-2">User ID:</label>
+            <input type="text" id="userId" th:field="*{userId}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   th:readonly="${userAccount.userId != null}">
+        </div>
+
+        <div class="mb-4">
+            <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username:</label>
+            <input type="text" id="username" th:field="*{username}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+
+        <div class="mb-4">
+            <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+            <input type="password" id="password" th:field="*{password}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   th:placeholder="${userAccount.userId != null} ? 'Leave blank to keep current password' : ''">
+        </div>
+
+        <div class="mb-4">
+            <label for="siteId" class="block text-gray-700 text-sm font-bold mb-2">Site:</label>
+            <select id="siteId" th:field="*{siteId}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="">Select Site</option>
+                <option th:each="site : ${sites}" th:value="${site.id.siteId}" th:text="${site.siteName}"></option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="deptId" class="block text-gray-700 text-sm font-bold mb-2">Department:</label>
+            <select id="deptId" th:field="*{deptId}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="">Select Department</option>
+                <option th:each="dept : ${depts}" th:value="${dept.id.deptId}" th:text="${dept.deptName}"></option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+            <input type="email" id="email" th:field="*{email}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+
+        <div class="mb-4">
+            <label for="phone" class="block text-gray-700 text-sm font-bold mb-2">Phone:</label>
+            <input type="text" id="phone" th:field="*{phone}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                <input type="checkbox" th:field="*{active}" class="mr-2 leading-tight">
+                <span class="text-sm">Active</span>
+            </label>
+        </div>
+
+        <div class="flex items-center justify-between">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Save
+            </button>
+            <a th:href="@{/admin/user-accounts}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

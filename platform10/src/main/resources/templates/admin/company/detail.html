@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+<head>
+    <title>Company Details</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mx-auto mt-10 max-w-4xl">
+    <h1 class="text-2xl font-bold mb-5">Company Details</h1>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="mb-4">
+            <strong class="text-gray-700">ID:</strong>
+            <span th:text="${company.companyId}"></span>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">Name:</strong>
+            <span th:text="${company.companyName}"></span>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">Active:</strong>
+            <span th:text="${company.active}"></span>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">Created At:</strong>
+            <span th:text="${#temporals.format(company.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">Updated At:</strong>
+            <span th:text="${#temporals.format(company.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+        </div>
+        <div class="mt-6">
+            <a th:href="@{/admin/companies}" class="text-blue-500 hover:underline">Back to List</a> |
+            <a th:href="@{/admin/companies/{id}/edit(id=${company.companyId})}" class="text-green-500 hover:underline">Edit</a> |
+            <form th:action="@{/admin/companies/{id}/delete(id=${company.companyId})}" method="post" class="inline">
+                <button type="submit" class="text-red-500 hover:underline">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

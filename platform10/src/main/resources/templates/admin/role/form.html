@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+<head>
+    <title th:text="${role.roleId == null} ? 'New Role' : 'Edit Role'">Role Form</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mx-auto mt-10 max-w-4xl">
+    <h1 class="text-2xl font-bold mb-5" th:text="${role.roleId == null} ? 'New Role' : 'Edit Role'">Role Form</h1>
+    <form th:action="${role.roleId == null} ? @{/admin/roles} : @{/admin/roles/{companyId}/{roleId}(companyId=${role.companyId}, roleId=${role.roleId})}"
+          th:object="${role}" method="post" class="bg-white p-6 rounded-lg shadow-md">
+
+        <div class="mb-4">
+            <label for="companyId" class="block text-gray-700 text-sm font-bold mb-2">Company:</label>
+            <select id="companyId" th:field="*{companyId}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    th:disabled="${role.roleId != null}">
+                <option value="">Select Company</option>
+                <option th:each="company : ${companies}" th:value="${company.companyId}" th:text="${company.companyName}"></option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="roleId" class="block text-gray-700 text-sm font-bold mb-2">Role ID:</label>
+            <input type="text" id="roleId" th:field="*{roleId}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   th:readonly="${role.roleId != null}">
+        </div>
+
+        <div class="mb-4">
+            <label for="roleName" class="block text-gray-700 text-sm font-bold mb-2">Role Name:</label>
+            <input type="text" id="roleName" th:field="*{roleName}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+
+        <div class="flex items-center justify-between">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Save
+            </button>
+            <a th:href="@{/admin/roles}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

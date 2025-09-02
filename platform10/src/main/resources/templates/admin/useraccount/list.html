@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+<head>
+    <title>User Account List</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mx-auto mt-10 max-w-6xl">
+    <h1 class="text-2xl font-bold mb-5">User Accounts</h1>
+    <div class="mb-4">
+        <a th:href="@{/admin/user-accounts/new}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            New User Account
+        </a>
+    </div>
+    <table class="min-w-full bg-white">
+        <thead class="bg-gray-800 text-white">
+        <tr>
+            <th class="py-3 px-4 uppercase font-semibold text-sm">Company ID</th>
+            <th class="py-3 px-4 uppercase font-semibold text-sm">User ID</th>
+            <th class="py-3 px-4 uppercase font-semibold text-sm">Username</th>
+            <th class="py-3 px-4 uppercase font-semibold text-sm">Email</th>
+            <th class="py-3 px-4 uppercase font-semibold text-sm">Active</th>
+            <th class="py-3 px-4 uppercase font-semibold text-sm">Actions</th>
+        </tr>
+        </thead>
+        <tbody class="text-gray-700">
+        <tr th:each="user : ${userAccounts}">
+            <td class="py-3 px-4" th:text="${user.id.companyId}"></td>
+            <td class="py-3 px-4" th:text="${user.id.userId}"></td>
+            <td class="py-3 px-4" th:text="${user.username}"></td>
+            <td class="py-3 px-4" th:text="${user.email}"></td>
+            <td class="py-3 px-4" th:text="${user.active}"></td>
+            <td class="py-3 px-4">
+                <a th:href="@{/admin/user-accounts/{companyId}/{userId}(companyId=${user.id.companyId}, userId=${user.id.userId})}" class="text-blue-500 hover:underline">View</a> |
+                <a th:href="@{/admin/user-accounts/{companyId}/{userId}/edit(companyId=${user.id.companyId}, userId=${user.id.userId})}" class="text-green-500 hover:underline">Edit</a> |
+                <form th:action="@{/admin/user-accounts/{companyId}/{userId}/delete(companyId=${user.id.companyId}, userId=${user.id.userId})}" method="post" class="inline">
+                    <button type="submit" class="text-red-500 hover:underline">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

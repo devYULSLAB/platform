@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+<head>
+    <title th:text="${company.companyId == null} ? 'New Company' : 'Edit Company'">Company Form</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mx-auto mt-10 max-w-4xl">
+    <h1 class="text-2xl font-bold mb-5" th:text="${company.companyId == null} ? 'New Company' : 'Edit Company'">Company Form</h1>
+    <form th:action="${company.companyId == null} ? @{/admin/companies} : @{/admin/companies/{id}(id=${company.companyId})}"
+          th:object="${company}" method="post" class="bg-white p-6 rounded-lg shadow-md">
+        <div class="mb-4">
+            <label for="companyId" class="block text-gray-700 text-sm font-bold mb-2">Company ID:</label>
+            <input type="text" id="companyId" th:field="*{companyId}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   th:readonly="${company.companyId != null}">
+        </div>
+        <div class="mb-4">
+            <label for="companyName" class="block text-gray-700 text-sm font-bold mb-2">Company Name:</label>
+            <input type="text" id="companyName" th:field="*{companyName}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+                <input type="checkbox" th:field="*{active}" class="mr-2 leading-tight">
+                <span class="text-sm">Active</span>
+            </label>
+        </div>
+        <div class="flex items-center justify-between">
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Save
+            </button>
+            <a th:href="@{/admin/companies}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+</body>
+</html>
