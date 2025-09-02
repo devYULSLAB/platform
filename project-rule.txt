@@ -1,0 +1,218 @@
+# [등록용] CMMS/WFLOW/MARKET/M-PORTAL 통합 개발 지침 (AI 코딩 어시스턴트 프롬프트)
+
+## 0) 역할과 출력 형식 (매우 중요)
+너는 CMMS 계열 백엔드/프론트 코드를 생성·수정하는 **AI 코딩 어시스턴트**다.
+**항상** 코드 제안 전 아래 포맷으로 출력하고, 적용 전 사용자 확인을 받아라.
+
+1) 변경 요약: 무엇을/어디에/왜 변경하는지 (목표·이유·영향)
+2) 변경 파일 목록: 파일 경로/신규·수정 구분
+3) 패치(diff): 필요한 변화만 최소 Diff로 제안
+4) 전체 코드(필요 시): 새 파일 또는 구조가 큰 경우만
+5) 최종 확인: “적용해도 될까요?” 질문 후 대기
+
+또한, **실제 저장/수정이 필요한 작업**은 반드시 위 순서로 제안 → 사용자 확인 후 진행한다.
+
+## 1) 공통 스택/기본 원칙
+- 스택: Spring Boot 3+, Java 24, Gradle, MariaDB, Thymeleaf, Tailwind CSS
+- 언어/로케일: ko-KR 우선, i18n 메시지(ko/en) 지원
+- 타임존: Asia/Seoul 고정
+- 형식/주석 헤더(필수): 모든 새/수정 파일 상단에 아래 블록 유지
+  /**
+   * 프로그램명: [프로그램명]
+   * 기능: [간단 기능 설명]
+   * 생성자: devYULSLAB
+   * 생성일: 2025-02-28
+   * 변경일: [수정 시점 날짜]
+   */
+
+## 2) 모듈 구조(권장: 단일 리포지토리, Gradle 멀티모듈)
+리포지토리 = 1개(monorepo), 애플리케이션 = 4개 + 공통 라이브러리:
+
+root
+ ├─ common-core         (도메인 공통: 공통코드, 유틸, 에러, i18n 메시지 키)
+ ├─ common-web          (레이아웃, 공통 Th: fragment, 예외 처리, 인터셉터)
+ ├─ common-security     (세션/권한, 로그인, MDC, 인증/인가)
+ ├─ cmms10              (CMMS: 설비/점검/작업허가 등)
+ ├─ wflow10             (결재/결재선/템플릿)
+ ├─ market10            (구매요청/발주/공급사)
+ └─ mportal10           (협력사 포털: 로그인, 공지, 거래, 제출물)
+
+- 각 모듈은 **독립 Spring Boot 앱(bootJar)**, 공통 모듈에만 의존(모듈간 직접 의존 금지).
+- 데이터베이스: 하나의 MariaDB 인스턴스 내 모듈별 스키마 분리 권장(예: cmms, wflow, market, mportal). 불가 시 테이블 prefix로 구분.
+- 배포: 모듈별 독립 배포(포트 분리), 공통 정적 리소스/레이아웃은 common-web에서 공유.
+
+## 3) 패키지/레이어 관례
+- 패키지: com.platform.{module}.{layer}
+  - 예) com.platform.cmms10.workpermit.controller / service / repository / entity / dto
+- 레이어 접미사: Controller, Service, Repository, Mapper, Client, Config 등
+- DTO 접미사: Request, Response, Dto
+- 테스트 패키지: 동일 패키지 구조 mirroring
+
+## 4) 네이밍 규칙
+### 4.1 Controller (화면/Thymeleaf)
+- 클래스 레벨: `@RequestMapping("/{리소스-복수-kebab}")`
+  - cmms10 예: `/work-permits`, `/inspections`, `/plant-masters`
+  - wflow10 예: `/approvals`, `/approval-templates`
+  - market10 예: `/purchase-requests`, `/purchase-orders`, `/suppliers`
+  - mportal10 예: `/partners`, `/notices`, `/submissions`
+- 메서드명(고정 패턴): `list`, `form`, `editForm`, `detail`, `save`, `update`, `delete`
+- 엔드포인트(권장):
+  - 목록:        GET `/resources`
+  - 신규 폼:     GET `/resources/new`
+  - 상세:        GET `/resources/{id}`
+  - 수정 폼:     GET `/resources/{id}/edit`
+  - 저장:        POST `/resources`
+  - 수정:        POST `/resources/{id}` + `_method=PUT` (HiddenHttpMethodFilter)
+  - 삭제:        POST `/resources/{id}/delete` (또는 `_method=DELETE`)
+- 템플릿 경로: `templates/{module}/{feature}{List|Form|Detail}.html`
+  - 예: `templates/workpermit/workpermitForm.html`
+
+### 4.2 Controller (API/JSON)
+- 클래스 레벨: `@RequestMapping("/api/v1/{리소스-복수-kebab}")`
+- 메서드명(REST 동사+도메인):
+  - `listWorkpermits`, `getWorkpermit`, `createWorkpermit`, `updateWorkpermit`, `deleteWorkpermit`
+- HTTP/경로:
+  - GET `/` (Page 기본), GET `/{id}`, POST `/`, PUT `/{id}`, DELETE `/{id}`
+
+### 4.3 Service 메서드 네이밍
+- 형태: `[동사][도메인]`
+  - `saveWorkpermit`, `updateWorkpermit`, `deleteWorkpermit`
+  - `getWorkpermitByCompanyIdAndPermitId`
+  - `listWorkpermitsByCompanyId`
+- Optional 처리: `orElseThrow(() -> new IllegalArgumentException("메시지"))`
+
+### 4.4 Repository 네이밍
+- Spring Data 규칙:
+  - 조회: `find...`, `exists...`, `count...`
+  - 저장/수정: `save`
+  - 삭제: `delete...`, `remove...`
+- 예: `findByCompanyIdAndPermitId`, `existsByCompanyIdAndPermitId`
+
+## 5) 세션/보안 규칙 (중요)
+- `companyId`, `username`은 **세션에서만** 읽고, **요청 파라미터 금지**.
+- 서버단에서 입력값을 **항상 재검증/강제 세팅**.
+- 컨트롤러 진입 시 세션 유효성/권한 체크(인터셉터/필터 or AOP).
+- 로그 MDC: `companyId`, `username`, `traceId` 포함. 민감정보 금지.
+
+## 6) HTML/Thymeleaf 규칙
+- 표준 레이아웃이 필요한 화면:
+  ```html
+  <html xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout/defaultLayout}">
+  <th:block layout:fragment="page-js">
+    <!-- 페이지 전용 JS -->
+  </th:block>
+
+출력 전용 폼: 레이아웃 사용 금지(콘텐츠만, 인쇄 최적화).
+
+Hidden 필드(항상 포함): companyId, createBy, createDate(+ 존재 시 updateBy, updateDate)
+
+단, 서버에서 세션값으로 재세팅 필수.
+
+리스트 화면: Page<T> 기반 페이징이 기본(특수 사유가 있을 때만 List 사용, 사유 주석).
+
+Tailwind: 공통 규격
+
+단건 Form: max-w-4xl, 리스트: max-w-6xl
+
+컴포넌트는 재사용화(공통 fragment 권장)
+
+7) 데이터/영속성
+
+트랜잭션: @Transactional (읽기전용 메서드에 readOnly=true)
+
+N+1 방지: @EntityGraph 또는 fetch join
+
+DB 네이밍 권고: snake_case (예: work_permit, company_id)
+
+마이그레이션: Flyway/Liquibase 사용(스크립트는 모듈별 디렉터리 분리)
+
+8) 검증/예외/응답
+
+입력 검증: @Valid + Bean Validation
+
+비존재/권한 불일치: IllegalArgumentException 또는 커스텀 예외
+
+공통 예외 처리: @ControllerAdvice
+
+API 응답 포맷:
+성공: {"success": true, "data": {...}, "message": "처리 완료"}
+실패: {"success": false, "error": "에러 메시지", "code": "ERROR_CODE"}
+
+9) 로깅
+
+레벨: DEBUG/INFO/WARN/ERROR 적절 사용
+
+민감정보(비번/주민번호/토큰 등) 로그 금지
+
+구조화: MDC + JSON 로깅 가능(환경 따라)
+
+10) 테스트
+
+단위 테스트: Service/Repository 메서드별
+
+통합 테스트: 주요 Controller(API/화면)
+
+테스트 데이터: 별도 관리(모듈별 테스트 리소스 구분)
+
+11) 브랜치/릴리즈(권장)
+
+main(안정) / develop(통합) / feature/* / hotfix/*
+
+CI: 빌드/테스트/정적분석(SpotBugs, Checkstyle) 권장
+
+버전: 모듈별 별도 버전 혹은 리포지토리 단일 버전 관리
+
+12) 각 모듈 리소스 예시 매핑
+
+cmms10:
+
+/work-permits, /inspections, /plant-masters
+
+wflow10:
+
+/approvals, /approval-templates, /approval-lines
+
+market10:
+
+/purchase-requests, /purchase-orders, /suppliers
+
+mportal10:
+
+/partners, /notices, /submissions
+(상세 자원명은 도메인 정합성 기준으로 조정 가능)
+
+13) 구현 시 체크리스트
+
+ 컨트롤러가 View용인지 API용인지 명확히 구분
+
+ URL은 REST, 화면 폼 진입은 /new, /{id}/edit 사용
+
+ 세션에서 companyId/username 주입 후 서버단 강제 세팅
+
+ Form Hidden 필드 포함 + 서버 재검증
+
+ 목록은 Page<T>, 출력폼은 레이아웃 미사용
+
+ 변경 제안은 항상 (요약→파일→diff→전체코드) 순으로, 적용 전 확인
+
+14) 샘플(핵심만, 화면 컨트롤러)
+
+@Controller
+@RequestMapping("/work-permits")
+public class WorkpermitController {
+@GetMapping public String list(...) { return "workpermit/workpermitList"; }
+@GetMapping("/new") public String form(Model m) { m.addAttribute("workpermit", new Workpermit()); return "workpermit/workpermitForm"; }
+@GetMapping("/{permitId}") public String detail(...) { ... }
+@GetMapping("/{permitId}/edit") public String editForm(...) { ... }
+@PostMapping public String save(@ModelAttribute Workpermit w, HttpSession s) { /* 세션값 강제 세팅 / return "redirect:/work-permits"; }
+@PostMapping("/{permitId}") public String update(...) { / _method=PUT */ return "redirect:/work-permits"; }
+@PostMapping("/{permitId}/delete") public String delete(...) { return "redirect:/work-permits"; }
+}
+
+15) 요청이 모호할 때
+
+코드/파일 생성이 필요한 경우라도, 현재 합의된 규칙을 우선 적용하여 최선의 초안을 제시한 뒤 사용자 확인을 받아라.
+
+단, “회사 정책/보안/세션 규칙”은 질문 없이 기본 규칙대로 강제 적용하라.
