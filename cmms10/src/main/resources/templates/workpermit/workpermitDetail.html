@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/cmmsLayout}">
+<head>
+    <title>Work Permit Detail</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <h1 class="text-3xl font-bold mb-4">Work Permit Detail</h1>
+
+    <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Permit ID:</label>
+            <p class="text-gray-700" th:text="${workPermit.id.permitId}">123</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Permit Name:</label>
+            <p class="text-gray-700" th:text="${workPermit.permitName}">Hot Work Permit</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Requestor:</label>
+            <p class="text-gray-700" th:text="${workPermit.requestorName}">John Doe</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Status:</label>
+            <p class="text-gray-700" th:text="${workPermit.status}">APPROVED</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Created By:</label>
+            <p class="text-gray-700" th:text="${workPermit.createdBy}">admin</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Created At:</label>
+            <p class="text-gray-700" th:text="${#temporals.format(workPermit.createdAt, 'yyyy-MM-dd HH:mm')}">2025-02-28 10:00</p>
+        </div>
+    </div>
+
+    <div class="flex items-center space-x-4">
+        <a th:href="@{/work-permits}" class="text-blue-500 hover:underline">Back to List</a>
+        <a th:href="@{/work-permits/{id}/edit(id=${workPermit.id.permitId})}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            Edit
+        </a>
+        <form th:action="@{/work-permits/{id}/delete(id=${workPermit.id.permitId})}" method="post" onsubmit="return confirm('Are you sure you want to delete this permit?');">
+            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Delete
+            </button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
