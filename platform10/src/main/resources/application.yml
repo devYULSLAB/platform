@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: platform10
+  datasource:
+    url: jdbc:mysql://localhost:3306/platform?createDatabaseIfNotExist=true
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  flyway:
+    enabled: true
+server:
+  port: 9005

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+<head>
+    <title>User Account Details</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mx-auto mt-10 max-w-4xl">
+    <h1 class="text-2xl font-bold mb-5">User Account Details</h1>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="mb-4">
+            <strong class="text-gray-700">Company ID:</strong>
+            <span th:text="${userAccount.id.companyId}"></span>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">User ID:</strong>
+            <span th:text="${userAccount.id.userId}"></span>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">Username:</strong>
+            <span th:text="${userAccount.username}"></span>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">Site:</strong>
+            <span th:text="${userAccount.site != null ? userAccount.site.siteName : 'N/A'}"></span>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">Department:</strong>
+            <span th:text="${userAccount.dept != null ? userAccount.dept.deptName : 'N/A'}"></span>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">Email:</strong>
+            <span th:text="${userAccount.email}"></span>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">Phone:</strong>
+            <span th:text="${userAccount.phone}"></span>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">Active:</strong>
+            <span th:text="${userAccount.active}"></span>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">Created At:</strong>
+            <span th:text="${#temporals.format(userAccount.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+        </div>
+        <div class="mb-4">
+            <strong class="text-gray-700">Updated At:</strong>
+            <span th:text="${#temporals.format(userAccount.updatedAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+        </div>
+        <div class="mt-6">
+            <a th:href="@{/admin/user-accounts}" class="text-blue-500 hover:underline">Back to List</a> |
+            <a th:href="@{/admin/user-accounts/{companyId}/{userId}/edit(companyId=${userAccount.id.companyId}, userId=${userAccount.id.userId})}" class="text-green-500 hover:underline">Edit</a> |
+            <form th:action="@{/admin/user-accounts/{companyId}/{userId}/delete(companyId=${userAccount.id.companyId}, userId=${userAccount.id.userId})}" method="post" class="inline">
+                <button type="submit" class="text-red-500 hover:underline">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

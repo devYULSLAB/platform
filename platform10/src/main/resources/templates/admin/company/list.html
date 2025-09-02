@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+<head>
+    <title>Company List</title>
+</head>
+<body>
+<div layout:fragment="content" class="container mx-auto mt-10 max-w-6xl">
+    <h1 class="text-2xl font-bold mb-5">Companies</h1>
+    <div class="mb-4">
+        <a th:href="@{/admin/companies/new}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            New Company
+        </a>
+    </div>
+    <table class="min-w-full bg-white">
+        <thead class="bg-gray-800 text-white">
+        <tr>
+            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">ID</th>
+            <th class="w-1/2 py-3 px-4 uppercase font-semibold text-sm">Name</th>
+            <th class="w-1/4 py-3 px-4 uppercase font-semibold text-sm">Active</th>
+            <th class="py-3 px-4 uppercase font-semibold text-sm">Actions</th>
+        </tr>
+        </thead>
+        <tbody class="text-gray-700">
+        <tr th:each="company : ${companies}">
+            <td class="w-1/4 py-3 px-4" th:text="${company.companyId}"></td>
+            <td class="w-1/2 py-3 px-4" th:text="${company.companyName}"></td>
+            <td class="w-1/4 py-3 px-4" th:text="${company.active}"></td>
+            <td class="py-3 px-4">
+                <a th:href="@{/admin/companies/{id}(id=${company.companyId})}" class="text-blue-500 hover:underline">View</a> |
+                <a th:href="@{/admin/companies/{id}/edit(id=${company.companyId})}" class="text-green-500 hover:underline">Edit</a> |
+                <form th:action="@{/admin/companies/{id}/delete(id=${company.companyId})}" method="post" class="inline">
+                    <button type="submit" class="text-red-500 hover:underline">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
