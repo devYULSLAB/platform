@@ -1,0 +1,20 @@
+dependencies {
+    // This module may depend on common-core for shared utilities
+    implementation project(':common-core')
+
+    // Spring Boot dependencies for web and thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    // For Thymeleaf layout dialect
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+}
+
+// This is a library module, not a runnable application
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}

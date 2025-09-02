@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Main Header -->
+    <header class="bg-gray-800 text-white shadow-lg">
+        <div class="container mx-auto flex items-center justify-between p-4">
+            <h1 class="text-xl font-bold">
+                <a href="/" class="hover:text-gray-300">Platform Portal</a>
+            </h1>
+            <nav class="flex items-center">
+                <!-- App-specific navigation will be inserted here -->
+                <div layout:fragment="app-nav"></div>
+
+                <div class="ml-auto flex items-center">
+                     <span class="mr-4" th:text="${#authentication.name}">username</span>
+                     <form th:action="@{/logout}" method="post">
+                         <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Logout</button>
+                     </form>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto p-4 mt-4">
+        <div layout:fragment="content" class="bg-white p-6 rounded-lg shadow-md">
+            <!-- Page-specific content goes here -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center p-4 mt-8 text-gray-600">
+        <p>&copy; 2025 devYULSLAB. All Rights Reserved.</p>
+        <!-- AppSwitcher could go here as another fragment -->
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+dependencies {
+    // This module depends on common-core for any shared utilities or base entities
+    implementation project(':common-core')
+
+    // Spring Boot dependencies for security and web
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web' // For SecurityConfig to work with web requests
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // For JPA entities and repositories
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // For the login page template
+
+    // Database
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
+}
+
+// This is a library module, not a runnable application
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}

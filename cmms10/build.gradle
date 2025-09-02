@@ -23,12 +23,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-security' // For common-security integration
 
-    // Common Modules (assuming they will be available in the multi-project build)
-    // implementation project(':common-core')
-    // implementation project(':common-web')
-    // implementation project(':common-security')
+    // Common Modules
+    implementation project(':common-core')
+    implementation project(':common-web')
+    implementation project(':common-security')
 
     // Database
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
