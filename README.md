@@ -22,8 +22,8 @@ This project uses a Gradle Wrapper, so you don't need to install Gradle on your 
 ### Wrapper Maintenance
 If you need to update the Gradle version used by the project, you can run the following command. This requires a local Gradle installation.
 ```bash
-# Example: Update to Gradle 8.8
-gradle wrapper --gradle-version 8.8
+# Example: Update to Gradle 8.14
+gradle wrapper --gradle-version 8.14
 ```
 After running the command, be sure to commit the changed wrapper files to version control.
 
