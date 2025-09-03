@@ -19,6 +19,14 @@ The project is divided into two types of modules:
 
 This project uses a Gradle Wrapper, so you don't need to install Gradle on your system. The wrapper script (`./gradlew`) will download and use the correct Gradle version automatically.
 
+### Wrapper Maintenance
+If you need to update the Gradle version used by the project, you can run the following command. This requires a local Gradle installation.
+```bash
+# Example: Update to Gradle 8.8
+gradle wrapper --gradle-version 8.8
+```
+After running the command, be sure to commit the changed wrapper files to version control.
+
 ### Prerequisites
 - Java 24 JDK
 
