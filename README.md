@@ -15,35 +15,56 @@ The project is divided into two types of modules:
     -   `platform10`: (Not yet implemented) Intended as an admin portal for managing users, companies, etc.
     -   Other modules like `wflow10`, `market10` are planned.
 
-## Build Instructions
+## Build and Run Instructions
 
-This is a standard Gradle project.
+This project uses a Gradle Wrapper, so you don't need to install Gradle on your system. The wrapper script (`./gradlew`) will download and use the correct Gradle version automatically.
 
 ### Prerequisites
 - Java 24 JDK
 
-### Build Command
-To build all modules and run all tests, execute the following command from the root directory:
+### Build Order
+This is a multi-module project. The build order is determined by the dependencies between modules:
+1.  `common-*` modules (libraries) are built first.
+2.  Application modules (`cmms10`, etc.) that depend on the common modules are built next.
 
-```bash
-./gradlew build
-```
-This will assemble the JAR files for all modules.
+You do not need to manage this order manually. Running a Gradle task on an application module will automatically build its dependencies first.
 
-## How to Run
+### Building the Application
+You can build the entire project or a specific application module.
+
+-   **Build All Modules**: To build all modules and run all tests, execute the following from the root directory:
+    ```bash
+    ./gradlew build
+    ```
+-   **Build a Specific Module**: To build only the `cmms10` application and its dependencies:
+    ```bash
+    ./gradlew :cmms10:build
+    ```
+This will assemble the JAR file for the specified module in its `build/libs` directory.
 
 ### 1. Database Setup
 The project is configured to use a MariaDB/MySQL database.
 1.  Create a database named `cmms`.
 2.  The application will automatically create and seed the necessary tables using Flyway when it starts for the first time. The connection details are in `cmms10/src/main/resources/application.yml`.
 
-### 2. Running the `cmms10` Application
-To run the CMMS application, use the following Gradle command:
+### 2. Choosing an Application to Run
+You cannot run the "entire project" at once. You must choose and run a specific application module (e.g., `cmms10`). Each runnable module is a separate Spring Boot application.
 
+To run the `cmms10` application, use the following Gradle command:
 ```bash
 ./gradlew :cmms10:bootRun
 ```
 The application will start on port **9010**.
+
+## Configuration and Profiles
+
+### Configuration File
+Application settings (like database connections) are managed in the `application.yml` file located in each application module's `src/main/resources` directory (e.g., `cmms10/src/main/resources/application.yml`).
+
+### Profiles
+The project is not pre-configured with multiple profiles (e.g., `dev`, `test`, `prod`). It runs using the default settings defined directly in `application.yml`.
+
+To use profiles, you would need to create profile-specific configuration files (e.g., `application-dev.yml`) and activate the desired profile using a Spring Boot property.
 
 ## User and Administrator Setup
 
