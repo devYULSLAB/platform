@@ -11,10 +11,6 @@ dependencies {
 }
 
 // This is a library module, not a runnable application
-bootJar {
-    enabled = false
-}
-
 jar {
     enabled = true
 }
