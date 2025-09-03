@@ -3,9 +3,9 @@ dependencies {
     implementation project(':common-core')
 
     // Spring Boot dependencies for security and web
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-web' // For SecurityConfig to work with web requests
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // For JPA entities and repositories
+    api 'org.springframework.boot:spring-boot-starter-security'
+    api 'org.springframework.boot:spring-boot-starter-web' // For SecurityConfig to work with web requests
+    api 'org.springframework.boot:spring-boot-starter-data-jpa' // For JPA entities and repositories
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // For the login page template
 
     // Database
