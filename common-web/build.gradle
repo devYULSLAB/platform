@@ -12,6 +12,9 @@ dependencies {
 
     // For Thymeleaf layout dialect
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
+    // Add Spring Security integration for Thymeleaf
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 }
 
 // This is a library module, not a runnable application
