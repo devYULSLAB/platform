@@ -25,8 +25,9 @@ subprojects {
 
     dependencies {
         // Common dependencies for all modules
-        compileOnly 'org.projectlombok:lombok'
-        annotationProcessor 'org.projectlombok:lombok'
+        // Force Lombok version compatible with Java 24
+        compileOnly 'org.projectlombok:lombok:1.18.38'
+        annotationProcessor 'org.projectlombok:lombok:1.18.38'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
     }
 
