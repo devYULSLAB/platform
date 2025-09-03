@@ -1,3 +1,7 @@
+plugins {
+    id 'java-library'
+}
+
 dependencies {
     // This module may depend on common-core for shared utilities
     implementation project(':common-core')
